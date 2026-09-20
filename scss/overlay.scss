@@ -3,8 +3,8 @@
    Point d'entree : assemble les partials ci-dessous.
    ========================================================================== */
 
-@use "abstracts/variables";
-@use "base/reset";
-@use "layout/screen";
-@use "layout/frame";
-@use "components/badge";
+@use "variables";
+@use "reset";
+@use "screen";
+@use "frame";
+@use "badge";
