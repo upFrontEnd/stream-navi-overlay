@@ -11,9 +11,17 @@
   /* ------------------------------------------------------------------
      1. Les compagnies. La cle est le prefixe ICAO du callsign (AFR,
         EZY, RYR...), aussi utilisable manuellement via l'URL. Le
-        fichier du logo est cherche dans logos/.
+        fichier du logo est cherche dans public/logos/ ; celles listees
+        ici sans logo (ou dont le fichier est absent) se contentent de
+        masquer le bandeau (voir plus bas).
         Format conseille : PNG ou SVG a fond transparent, hauteur 60 px
         minimum pour rester net si --scale depasse 1.
+
+        Codes ICAO et noms extraits du dataset ouvert OpenFlights
+        (https://github.com/jpatokal/openflights, data/airlines.dat),
+        limites aux compagnies court/moyen-courrier europeennes les plus
+        courantes. Pour en ajouter une : chercher son code ICAO dans ce
+        dataset et ajouter une entree ci-dessous.
      ------------------------------------------------------------------ */
 
   var DOSSIER_LOGOS = "logos/";
@@ -23,7 +31,32 @@
     TVF: { nom: "Transavia", logo: "transavia.svg" },
     EZY: { nom: "easyJet", logo: "easyjet.svg" },
     RYR: { nom: "Ryanair", logo: "ryanair.svg" },
-    VLG: { nom: "Vueling", logo: "vueling.svg" }
+    VLG: { nom: "Vueling", logo: "vueling.svg" },
+    KLM: { nom: "KLM", logo: "klm.svg" },
+    DLH: { nom: "Lufthansa", logo: "lufthansa.svg" },
+    BAW: { nom: "British Airways", logo: "british-airways.svg" },
+    IBE: { nom: "Iberia", logo: "iberia.svg" },
+    WZZ: { nom: "Wizz Air", logo: "wizz-air.svg" },
+    VOE: { nom: "Volotea", logo: "volotea.svg" },
+    CRL: { nom: "Corsair", logo: "corsair.svg" },
+    FWI: { nom: "Air Caraibes", logo: "air-caraibes.svg" },
+    TAP: { nom: "TAP Air Portugal", logo: "tap-air-portugal.svg" },
+    SWR: { nom: "SWISS", logo: "swiss.svg" },
+    AUA: { nom: "Austrian Airlines", logo: "austrian.svg" },
+    DAT: { nom: "Brussels Airlines", logo: "brussels-airlines.svg" },
+    NAX: { nom: "Norwegian", logo: "norwegian.svg" },
+    FIN: { nom: "Finnair", logo: "finnair.svg" },
+    THY: { nom: "Turkish Airlines", logo: "turkish-airlines.svg" },
+    PGT: { nom: "Pegasus Airlines", logo: "pegasus.svg" },
+    CFG: { nom: "Condor", logo: "condor.svg" },
+    EWG: { nom: "Eurowings", logo: "eurowings.svg" },
+    EIN: { nom: "Aer Lingus", logo: "aer-lingus.svg" },
+    AMC: { nom: "Air Malta", logo: "air-malta.svg" },
+    LGL: { nom: "Luxair", logo: "luxair.svg" },
+    CTN: { nom: "Croatia Airlines", logo: "croatia-airlines.svg" },
+    ASL: { nom: "Air Serbia", logo: "air-serbia.svg" },
+    AEE: { nom: "Aegean Airlines", logo: "aegean.svg" },
+    TJT: { nom: "Twin Jet", logo: "twin-jet.svg" }
   };
 
   /* Compagnie affichee par defaut, tant qu'aucun callsign n'est lu */
