@@ -23,12 +23,11 @@
     TVF: { nom: "Transavia", logo: "transavia.svg" },
     EZY: { nom: "easyJet", logo: "easyjet.svg" },
     RYR: { nom: "Ryanair", logo: "ryanair.svg" },
-    VLG: { nom: "Vueling", logo: "vueling.svg" },
-    MEMU: { nom: "MEMU" }
+    VLG: { nom: "Vueling", logo: "vueling.svg" }
   };
 
   /* Compagnie affichee par defaut, tant qu'aucun callsign n'est lu */
-  var DEFAUT = "MEMU";
+  var DEFAUT = "AFR";
 
   /* Nom du parametre d'URL pour forcer une compagnie manuellement,
      utile en test : index.html?cie=AFR (desactive alors le suivi
@@ -119,9 +118,9 @@
     var lettres = /^[A-Za-z]+/.exec(String(texte || "").trim());
     if (!lettres) return null;
 
-    /* Prefixe complet d'abord (couvre les codes hors norme ICAO comme
-       "MEMU"), puis repli sur les 3 premieres lettres (norme ICAO
-       compagnie, ex. "AFR" dans "AFR1234"). */
+    /* Prefixe complet d'abord (couvre un eventuel code hors norme ICAO),
+       puis repli sur les 3 premieres lettres (norme ICAO compagnie,
+       ex. "AFR" dans "AFR1234"). */
     var complet = lettres[0].toUpperCase();
     if (COMPAGNIES[complet]) return complet;
     return complet.slice(0, 3);
