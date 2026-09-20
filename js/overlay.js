@@ -58,37 +58,26 @@
      ------------------------------------------------------------------ */
 
   var logo = document.querySelector("[data-logo]");
-  var nom = document.querySelector("[data-nom]");
 
-  function afficherTexte(texte) {
+  function masquerLogo() {
     logo.hidden = true;
     logo.removeAttribute("src");
-    nom.textContent = texte;
-    nom.hidden = false;
   }
 
   function afficher(code) {
-    if (!logo || !nom) return;
+    if (!logo) return;
 
     var cle = String(code || "").trim().toUpperCase();
     var compagnie = COMPAGNIES[cle];
 
-    if (!compagnie) {
-      afficherTexte(cle || DEFAUT);
+    if (!compagnie || !compagnie.logo) {
+      masquerLogo();
       return;
     }
 
-    if (!compagnie.logo) {
-      afficherTexte(compagnie.nom);
-      return;
-    }
-
-    /* Repli sur le nom en texte si le fichier est absent ou illisible */
-    logo.onerror = function () {
-      afficherTexte(compagnie.nom);
-    };
+    /* Masque le logo si le fichier est absent ou illisible */
+    logo.onerror = masquerLogo;
     logo.onload = function () {
-      nom.hidden = true;
       logo.hidden = false;
     };
 
