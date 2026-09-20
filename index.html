@@ -21,7 +21,16 @@
   OBS : Sources > + > Source navigateur > Fichier local > dist/index.html
         Largeur 392, Hauteur 625 (a multiplier par --scale si modifiee)
 
-  Choix de la compagnie : parametre ?cie= dans l'URL de la source navigateur,
+  Logo automatique via StreamFlight (MSFS) :
+    1. Dans StreamFlight, regle le dossier "Output" sur le MEME dossier
+       que dist/index.html.
+    2. L'overlay lit callsign.txt dans ce dossier toutes les 2 s et en
+       deduit la compagnie (3 premieres lettres, ex. AFR1234 -> AFR).
+    3. Si StreamFlight utilise un autre nom de fichier chez toi, corrige
+       STREAMFLIGHT_FICHIER dans js/overlay.js.
+
+  Test manuel (desactive StreamFlight pour la session) : parametre ?cie=
+  dans l'URL de la source navigateur,
   par exemple  file:///C:/overlay-memu/dist/index.html?cie=AFR
   La liste des compagnies se configure dans js/overlay.js
 -->
