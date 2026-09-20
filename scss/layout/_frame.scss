@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Cadre : contour degrade bleu vers cyan + lisere interieur + coins
+   ========================================================================== */
+
+.frame {
+  left: 2px;
+  top: 24px;
+  width: 389px;
+  height: 594px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-image: linear-gradient(to top, var(--c-cyan), var(--c-blue)) 1;
+  pointer-events: none;
+}
+
+.frame-inner {
+  left: 4px;
+  top: 26px;
+  width: 385px;
+  height: 590px;
+  box-sizing: border-box;
+  border: 2px solid var(--c-navy);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+/* Quatre triangles de 19 px */
+.corner {
+  width: 19px;
+  height: 19px;
+  pointer-events: none;
+}
+
+.corner--tl { left: 4px;   top: 26px;  background: var(--c-blue); clip-path: polygon(0 0, 100% 0, 0 100%); }
+.corner--tr { left: 370px; top: 26px;  background: var(--c-blue); clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.corner--bl { left: 4px;   top: 597px; background: var(--c-cyan); clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.corner--br { left: 370px; top: 597px; background: var(--c-cyan); clip-path: polygon(100% 0, 100% 100%, 0 100%); }

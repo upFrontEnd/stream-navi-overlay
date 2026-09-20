@@ -1,0 +1,12 @@
+/* ==========================================================================
+   Reset minimal
+   ========================================================================== */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent; /* indispensable pour OBS */
+}
+
+[hidden] { display: none !important; }

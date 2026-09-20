@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Conteneur general + ecran : fond degrade + carte aeronautique
+   ========================================================================== */
+
+.overlay {
+  position: relative;
+  width: 392px;
+  height: 625px;
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.overlay > * { position: absolute; }
+
+.screen {
+  left: 4px;
+  top: 26px;
+  width: 385px;
+  height: 590px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--screen-top) 0%, var(--screen-bottom) 100%);
+  isolation: isolate; /* confine la fusion Produit a l'ecran */
+}
+
+.screen__map {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  /* Chemin relatif a scss/overlay.scss (point d'entree), pas a ce partial :
+     Vite/Sass resout les url() par rapport au fichier compile en premier. */
+  background-image: url("../img/map.jpg");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: multiply;
+  opacity: var(--map-opacity);
+}
+
+/* Zone libre : texte, infos de vol, contenu anime... */
+.screen__content {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  box-sizing: border-box;
+  color: #e8eef6;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

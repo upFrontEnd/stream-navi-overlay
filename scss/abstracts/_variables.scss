@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Variables globales (custom properties CSS)
+   Toutes les valeurs proviennent du PSD d'origine (392 x 625 px)
+   ========================================================================== */
+
+:root {
+  /* Echelle globale du bloc : 1.5 donne 588 x 938 */
+  --scale: 1;
+
+  /* Palette du PSD */
+  --c-blue: #4285ec;   /* bleu haut du degrade, coins hauts, liseres */
+  --c-cyan: #069de4;   /* cyan bas du degrade, coins bas */
+  --c-navy: #002354;   /* lisere interieur */
+  --screen-top: #414d5a;
+  --screen-bottom: #2f3944;
+
+  /* Calque carte : opacite 66 % + fusion Produit, comme dans le PSD */
+  --map-opacity: .66;
+
+  /* Geometrie */
+  --radius: 5px;
+  --badge-radius: 8px;
+
+  /* Encombrement maximal du logo dans le bandeau */
+  --logo-max-w: 162px;
+  --logo-max-h: 29px;
+}
