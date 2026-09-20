@@ -35,7 +35,30 @@
   var PARAMETRE = "cie";
 
   /* ------------------------------------------------------------------
-     2. StreamFlight : lecture du callsign en direct.
+     2. Ecran transparent : index.html?ecran=transparent
+
+        Rend .screen transparent (fond degrade + carte masques) pour
+        laisser apparaitre, dans OBS, une source placee en-dessous
+        (ex. Capture de fenetre Navigraph) a travers ce rectangle,
+        tout en gardant le cadre/coins/badge visibles au-dessus.
+        Cadrage/position de cette source dans OBS : reglage manuel.
+     ------------------------------------------------------------------ */
+
+  var PARAMETRE_ECRAN = "ecran";
+  var VALEUR_ECRAN_TRANSPARENT = "transparent";
+
+  function ecranTransparentDemande() {
+    var trouve = new RegExp("[?&]" + PARAMETRE_ECRAN + "=([^&#]*)").exec(window.location.search);
+    return !!trouve && decodeURIComponent(trouve[1]).toLowerCase() === VALEUR_ECRAN_TRANSPARENT;
+  }
+
+  var ecran = document.querySelector(".screen");
+  if (ecran && ecranTransparentDemande()) {
+    ecran.classList.add("screen--transparent");
+  }
+
+  /* ------------------------------------------------------------------
+     3. StreamFlight : lecture du callsign en direct.
 
         StreamFlight ecrit des fichiers texte dans un dossier "Output"
         configure dans son interface (ex. flight_phase.txt, vspeed.txt).
@@ -54,7 +77,7 @@
   var STREAMFLIGHT_INTERVALLE_MS = 2000;
 
   /* ------------------------------------------------------------------
-     3. Mecanique d'affichage
+     4. Mecanique d'affichage
      ------------------------------------------------------------------ */
 
   var logo = document.querySelector("[data-logo]");
@@ -99,7 +122,7 @@
   }
 
   /* ------------------------------------------------------------------
-     4. Extraction du prefixe compagnie depuis un callsign
+     5. Extraction du prefixe compagnie depuis un callsign
         (ex. "AFR1234" ou "EZY23FR" -> "AFR" / "EZY")
      ------------------------------------------------------------------ */
 
@@ -152,7 +175,7 @@
   });
 
   /* ------------------------------------------------------------------
-     5. Pilotage depuis l'exterieur
+     6. Pilotage depuis l'exterieur
         overlay.compagnie("AFR")  change la compagnie a chaud
         overlay.liste()           renvoie les codes disponibles
         Utilisable dans la console de la source navigateur d'OBS,

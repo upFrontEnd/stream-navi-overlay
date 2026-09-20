@@ -48,3 +48,14 @@
   color: #e8eef6;
   font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
+
+/* Ecran transparent (parametre d'URL ?ecran=transparent) : laisse voir une
+   source OBS placee en-dessous (ex. Capture de fenetre Navigraph) a travers
+   le rectangle .screen, tout en gardant le cadre/coins/badge au-dessus. */
+.screen--transparent {
+  background: transparent;
+}
+
+.screen--transparent .screen__map {
+  display: none;
+}

@@ -33,6 +33,20 @@
   dans l'URL de la source navigateur,
   par exemple  file:///C:/overlay-memu/dist/index.html?cie=AFR
   La liste des compagnies se configure dans js/overlay.js
+
+  Incruster Navigraph a la place de la carte statique :
+    1. Ajoute cette source navigateur avec ?ecran=transparent en plus de
+       ?cie= si besoin, ex. ...index.html?ecran=transparent&cie=AFR
+       (rend .screen transparent : fond + carte masques).
+    2. Ajoute une source "Capture de fenetre" pour Navigraph, recadree et
+       positionnee a la main sur le rectangle .screen (left 4px, top 26px,
+       385 x 590 px, multiplie par --scale).
+    3. Dans la liste des sources OBS, place cette Capture de fenetre EN
+       DESSOUS de cette source navigateur : le cadre/coins/badge restent
+       visibles par-dessus, Navigraph apparait a travers la zone transparente.
+    Bascule manuelle : afficher/masquer la Capture de fenetre selon que
+    Navigraph tourne ou non (pas de detection automatique possible depuis
+    une source navigateur en bac a sable).
 -->
 </head>
 <body>
