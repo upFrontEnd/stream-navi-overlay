@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Overlay Twitch - Support MEMU
+   Toutes les valeurs proviennent du PSD d'origine (392 x 625 px)
+   ========================================================================== */
+
+:root {
+  /* Echelle globale du bloc : 1.5 donne 588 x 938 */
+  --scale: 1;
+
+  /* Palette du PSD */
+  --c-blue: #4285ec;   /* bleu haut du degrade, coins hauts, liseres */
+  --c-cyan: #069de4;   /* cyan bas du degrade, coins bas */
+  --c-navy: #002354;   /* lisere interieur */
+  --screen-top: #414d5a;
+  --screen-bottom: #2f3944;
+
+  /* Calque carte : opacite 66 % + fusion Produit, comme dans le PSD */
+  --map-opacity: .66;
+
+  /* Geometrie */
+  --radius: 5px;
+  --badge-radius: 8px;
+
+  /* Encombrement maximal du logo dans le bandeau */
+  --logo-max-w: 162px;
+  --logo-max-h: 29px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent; /* indispensable pour OBS */
+}
+
+[hidden] { display: none !important; }
+
+.overlay {
+  position: relative;
+  width: 392px;
+  height: 625px;
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.overlay > * { position: absolute; }
+
+/* --------------------------------------------------------------------------
+   Ecran : fond degrade + carte aeronautique
+   -------------------------------------------------------------------------- */
+
+.screen {
+  left: 4px;
+  top: 26px;
+  width: 385px;
+  height: 590px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--screen-top) 0%, var(--screen-bottom) 100%);
+  isolation: isolate; /* confine la fusion Produit a l'ecran */
+}
+
+.screen__map {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-image: url("map.jpg");
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: multiply;
+  opacity: var(--map-opacity);
+}
+
+/* Zone libre : texte, infos de vol, contenu anime... */
+.screen__content {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  box-sizing: border-box;
+  color: #e8eef6;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Cadre : contour degrade bleu vers cyan + lisere interieur
+   -------------------------------------------------------------------------- */
+
+.frame {
+  left: 2px;
+  top: 24px;
+  width: 389px;
+  height: 594px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-image: linear-gradient(to top, var(--c-cyan), var(--c-blue)) 1;
+  pointer-events: none;
+}
+
+.frame-inner {
+  left: 4px;
+  top: 26px;
+  width: 385px;
+  height: 590px;
+  box-sizing: border-box;
+  border: 2px solid var(--c-navy);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Coins : quatre triangles de 19 px
+   -------------------------------------------------------------------------- */
+
+.corner {
+  width: 19px;
+  height: 19px;
+  pointer-events: none;
+}
+
+.corner--tl { left: 4px;   top: 26px;  background: var(--c-blue); clip-path: polygon(0 0, 100% 0, 0 100%); }
+.corner--tr { left: 370px; top: 26px;  background: var(--c-blue); clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.corner--bl { left: 4px;   top: 597px; background: var(--c-cyan); clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.corner--br { left: 370px; top: 597px; background: var(--c-cyan); clip-path: polygon(100% 0, 100% 100%, 0 100%); }
+
+/* --------------------------------------------------------------------------
+   Bandeau compagnie
+   -------------------------------------------------------------------------- */
+
+.badge {
+  left: 105px;
+  top: 7px;
+  width: 186px;
+  height: 39px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid var(--c-blue);
+  border-radius: var(--badge-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.badge__logo {
+  max-width: var(--logo-max-w);
+  max-height: var(--logo-max-h);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Repli si le fichier du logo est introuvable */
+.badge__nom {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--c-navy);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
