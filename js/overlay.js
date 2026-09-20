@@ -21,7 +21,7 @@
     EZY: { nom: "easyJet", logo: "easyjet.svg" },
     RYR: { nom: "Ryanair", logo: "ryanair.svg" },
     VLG: { nom: "Vueling", logo: "vueling.svg" },
-    MEMU: { nom: "MEMU", logo: "memu.svg" }
+    MEMU: { nom: "MEMU" }
   };
 
   /* Compagnie affichee si l'URL n'en precise aucune */

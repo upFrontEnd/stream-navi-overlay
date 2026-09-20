@@ -3,24 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>Overlay Twitch - Support MEMU</title>
-<link rel="stylesheet" href="css/overlay.css">
+<link rel="stylesheet" href="/scss/overlay.scss">
 <!--
   Overlay Twitch converti depuis Twitch_-_Support_pour_MEMU.psd
   Dimensions natives : 392 x 625 px
 
-  Arborescence attendue :
+  Arborescence du projet (Vite) :
     index.html
-    overlay.css
-    overlay.js
-    map.jpg
-    logos/            <- les logos des compagnies
+    scss/overlay.scss
+    js/overlay.js
+    img/map.jpg
+    logos/            <- les logos des compagnies (a ajouter)
 
-  OBS : Sources > + > Source navigateur > Fichier local > index.html
+  Dev   : bun run dev      (serveur Vite avec rechargement)
+  Build : bun run build    (genere dist/, a utiliser dans OBS)
+
+  OBS : Sources > + > Source navigateur > Fichier local > dist/index.html
         Largeur 392, Hauteur 625 (a multiplier par --scale si modifiee)
 
   Choix de la compagnie : parametre ?cie= dans l'URL de la source navigateur,
-  par exemple  file:///C:/overlay-memu/index.html?cie=AFR
-  La liste des compagnies se configure dans overlay.js
+  par exemple  file:///C:/overlay-memu/dist/index.html?cie=AFR
+  La liste des compagnies se configure dans js/overlay.js
 -->
 </head>
 <body>
@@ -51,6 +54,6 @@
 
 </div>
 
-<script src="overlay.js"></script>
+<script type="module" src="/js/overlay.js"></script>
 </body>
 </html>
