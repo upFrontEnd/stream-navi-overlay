@@ -56,7 +56,8 @@
     CTN: { nom: "Croatia Airlines", logo: "croatia-airlines.svg" },
     ASL: { nom: "Air Serbia", logo: "air-serbia.svg" },
     AEE: { nom: "Aegean Airlines", logo: "aegean.svg" },
-    TJT: { nom: "Twin Jet", logo: "twin-jet.svg" }
+    TJT: { nom: "Twin Jet", logo: "twin-jet.svg" },
+    DAH: { nom: "Air Algerie", logo: "air-algerie.svg" }
   };
 
   /* Compagnie affichee par defaut, tant qu'aucun callsign n'est lu */
