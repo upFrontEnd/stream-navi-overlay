@@ -21,15 +21,19 @@
   OBS : Sources > + > Source navigateur > Fichier local > dist/index.html
         Largeur 392, Hauteur 625 (a multiplier par --scale si modifiee)
 
-  Logo automatique via StreamFlight (MSFS) :
+  Logo automatique via SimBrief (recommande) :
+    Renseigne VITE_SIMBRIEF_USERNAME dans .env.local puis relance
+    "bun run build". Le username est integre dans dist/index.html au
+    moment du build et n'apparait pas dans l'URL OBS.
+    L'overlay lit general.icao_airline dans le dernier plan de vol
+    SimBrief toutes les 30 s.
+
+  Logo automatique via StreamFlight (fallback si ?simbrief= absent) :
     1. Dans StreamFlight, regle le dossier "Output" sur le MEME dossier
        que dist/index.html.
-    2. L'overlay lit callsign.txt dans ce dossier toutes les 2 s et en
-       deduit la compagnie (3 premieres lettres, ex. AFR1234 -> AFR).
-    3. Si StreamFlight utilise un autre nom de fichier chez toi, corrige
-       STREAMFLIGHT_FICHIER dans js/overlay.js.
+    2. L'overlay lit callsign.txt dans ce dossier toutes les 2 s.
 
-  Test manuel (desactive StreamFlight pour la session) : parametre ?cie=
+  Test manuel (desactive toute integration) : parametre ?cie=
   dans l'URL de la source navigateur,
   par exemple  file:///C:/overlay-memu/dist/index.html?cie=AFR
   La liste des compagnies se configure dans js/overlay.js

@@ -92,18 +92,57 @@
   }
 
   /* ------------------------------------------------------------------
-     3. StreamFlight : lecture du callsign en direct.
+     3a. SimBrief : lecture du callsign depuis le dernier plan de vol.
 
-        StreamFlight ecrit des fichiers texte dans un dossier "Output"
-        configure dans son interface (ex. flight_phase.txt, vspeed.txt).
-        Pointe ce dossier Output vers le MEME dossier que le index.html
-        de cet overlay (dist/ apres bun run build), pour que le chemin
-        relatif ci-dessous fonctionne tel quel.
+         Parametre URL : ?simbrief=USERNAME  (nom de compte SimBrief)
+                      ou ?simbrief=12345     (Pilot ID numerique)
+         Exemple OBS : ...dist/index.html?simbrief=monpseudo
 
-        Nom de fichier non documente officiellement pour le callsign :
-        "callsign.txt" est la convention la plus probable (coherente
-        avec flight_phase.txt / vspeed.txt / altitude.txt). A adapter
-        ici si StreamFlight utilise un autre nom chez toi.
+         L'overlay interroge l'API SimBrief toutes les 30 s et affiche
+         le logo correspondant a general.icao_airline (code ICAO de la
+         compagnie, ex. "AFR").  Le parametre ?cie= reste prioritaire.
+
+         Quand ?simbrief= est absent, l'overlay bascule sur StreamFlight
+         (section 3b) pour rester compatible avec l'ancienne config.
+     ------------------------------------------------------------------ */
+
+  var SIMBRIEF_INTERVALLE_MS = 30000;
+
+  /* Priorite : ?simbrief= dans l'URL (test) > variable de build > null */
+  function parametreSimBrief() {
+    var m = /[?&]simbrief=([^&#]+)/.exec(window.location.search);
+    if (m) return decodeURIComponent(m[1]);
+    var env = import.meta.env.VITE_SIMBRIEF_USERNAME;
+    return env && env.trim() ? env.trim() : null;
+  }
+
+  function lireSimBrief(identifiant) {
+    var cle = /^\d+$/.test(identifiant) ? "userid" : "username";
+    var url =
+      "https://www.simbrief.com/api/xml.fetcher.php?json=v2&" +
+      cle + "=" + encodeURIComponent(identifiant);
+
+    fetch(url, { cache: "no-store" })
+      .then(function (reponse) {
+        if (!reponse.ok) throw new Error("HTTP " + reponse.status);
+        return reponse.json();
+      })
+      .then(function (data) {
+        var code = data && data.general && data.general.icao_airline;
+        if (code && String(code).trim()) {
+          afficher(String(code).trim().toUpperCase());
+        }
+      })
+      .catch(function (erreur) {
+        console.warn("[overlay] SimBrief inaccessible :", erreur);
+      });
+  }
+
+  /* ------------------------------------------------------------------
+     3b. StreamFlight : fallback si ?simbrief= n'est pas fourni.
+
+         Pointe le dossier "Output" de StreamFlight vers dist/ pour que
+         le chemin relatif "callsign.txt" soit resolu correctement.
      ------------------------------------------------------------------ */
 
   var STREAMFLIGHT_ACTIF = true;
@@ -227,13 +266,22 @@
     var manuel = codeManuel();
 
     if (manuel) {
-      /* ?cie= ou #... present : mode manuel, StreamFlight desactive pour la session */
+      /* ?cie= ou #... present : mode manuel, toute integration desactivee */
       afficher(manuel);
       return;
     }
 
     afficher(DEFAUT);
 
+    var simbrief = parametreSimBrief();
+    if (simbrief) {
+      /* Mode SimBrief : interroge l'API toutes les 30 s */
+      lireSimBrief(simbrief);
+      setInterval(function () { lireSimBrief(simbrief); }, SIMBRIEF_INTERVALLE_MS);
+      return;
+    }
+
+    /* Fallback StreamFlight : lit callsign.txt toutes les 2 s */
     if (STREAMFLIGHT_ACTIF) {
       lireStreamFlight();
       setInterval(lireStreamFlight, STREAMFLIGHT_INTERVALLE_MS);
