@@ -1,0 +1,28 @@
+@keyframes corner-glow {
+  0%, 100% { opacity: .6; }
+  50%       { opacity: 1; }
+}
+
+@keyframes frame-glow {
+  0%, 100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 10px rgba(6, 157, 228, 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 0 20px rgba(6, 157, 228, 0.18);
+  }
+}
+
+@keyframes accent-glow {
+  0%, 100% {
+    box-shadow: 0 0 4px var(--c-cyan), 0 0 8px rgba(6, 157, 228, 0.2);
+    opacity: .7;
+  }
+  50% {
+    box-shadow: 0 0 8px var(--c-cyan), 0 0 20px rgba(6, 157, 228, 0.4);
+    opacity: 1;
+  }
+}

@@ -3,6 +3,9 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 
 export default defineConfig({
   plugins: [viteSingleFile()],
+  css: {
+    devSourcemap: true,
+  },
   server: {
     open: true,
   },

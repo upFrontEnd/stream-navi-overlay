@@ -155,31 +155,19 @@
 
   var logo = document.querySelector("[data-logo]");
 
-  function masquerLogo() {
-    logo.hidden = true;
-    logo.removeAttribute("src");
-  }
-
   function afficher(code) {
     if (!logo) return;
 
     var cle = String(code || "").trim().toUpperCase();
     var compagnie = COMPAGNIES[cle];
 
-    if (!compagnie || !compagnie.logo) {
-      masquerLogo();
-      return;
-    }
+    if (!compagnie || !compagnie.logo) return;
 
-    /* Masque le logo si le fichier est absent ou illisible */
-    logo.onerror = masquerLogo;
-    logo.onload = function () {
-      logo.hidden = false;
-    };
+    var nouveauSrc = DOSSIER_LOGOS + compagnie.logo;
+    if (logo.getAttribute("src") === nouveauSrc) return;
 
     logo.alt = compagnie.nom;
-    logo.hidden = true;
-    logo.src = DOSSIER_LOGOS + compagnie.logo;
+    logo.src = nouveauSrc;
   }
 
   function codeManuel() {
@@ -226,7 +214,11 @@
         callsignPrecedent = callsign;
 
         var code = compagnieDepuisCallsign(callsign);
-        afficher(code || DEFAUT);
+        /* N'appeler afficher que si la compagnie est referencee.
+           Un callsign inconnu (VFR, ferry, etc.) garde l'affichage en cours. */
+        if (code && COMPAGNIES[code]) {
+          afficher(code);
+        }
       })
       .catch(function (erreur) {
         /* Fichier absent tant que StreamFlight n'est pas connecte au sim :
@@ -271,7 +263,8 @@
       return;
     }
 
-    afficher(DEFAUT);
+    /* Le logo par defaut (AFR) est deja dans l'attribut src du HTML.
+       On demarre le suivi sans ecraser l'affichage. */
 
     var simbrief = parametreSimBrief();
     if (simbrief) {

@@ -3,55 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>Overlay Twitch - Support MEMU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500;600;700&display=swap">
 <link rel="stylesheet" href="/scss/overlay.scss">
-<!--
-  Overlay Twitch converti depuis Twitch_-_Support_pour_MEMU.psd
-  Dimensions natives : 392 x 625 px
-
-  Arborescence du projet (Vite) :
-    index.html
-    scss/overlay.scss
-    js/overlay.js
-    img/map.jpg
-    logos/            <- les logos des compagnies (a ajouter)
-
-  Dev   : bun run dev      (serveur Vite avec rechargement)
-  Build : bun run build    (genere dist/, a utiliser dans OBS)
-
-  OBS : Sources > + > Source navigateur > Fichier local > dist/index.html
-        Largeur 392, Hauteur 625 (a multiplier par --scale si modifiee)
-
-  Logo automatique via SimBrief (recommande) :
-    Renseigne VITE_SIMBRIEF_USERNAME dans .env.local puis relance
-    "bun run build". Le username est integre dans dist/index.html au
-    moment du build et n'apparait pas dans l'URL OBS.
-    L'overlay lit general.icao_airline dans le dernier plan de vol
-    SimBrief toutes les 30 s.
-
-  Logo automatique via StreamFlight (fallback si ?simbrief= absent) :
-    1. Dans StreamFlight, regle le dossier "Output" sur le MEME dossier
-       que dist/index.html.
-    2. L'overlay lit callsign.txt dans ce dossier toutes les 2 s.
-
-  Test manuel (desactive toute integration) : parametre ?cie=
-  dans l'URL de la source navigateur,
-  par exemple  file:///C:/overlay-memu/dist/index.html?cie=AFR
-  La liste des compagnies se configure dans js/overlay.js
-
-  Incruster Navigraph a la place de la carte statique :
-    1. Ajoute cette source navigateur avec ?ecran=transparent en plus de
-       ?cie= si besoin, ex. ...index.html?ecran=transparent&cie=AFR
-       (rend .screen transparent : fond + carte masques).
-    2. Ajoute une source "Capture de fenetre" pour Navigraph, recadree et
-       positionnee a la main sur le rectangle .screen (left 4px, top 26px,
-       385 x 590 px, multiplie par --scale).
-    3. Dans la liste des sources OBS, place cette Capture de fenetre EN
-       DESSOUS de cette source navigateur : le cadre/coins/badge restent
-       visibles par-dessus, Navigraph apparait a travers la zone transparente.
-    Bascule manuelle : afficher/masquer la Capture de fenetre selon que
-    Navigraph tourne ou non (pas de detection automatique possible depuis
-    une source navigateur en bac a sable).
--->
 </head>
 <body>
 
@@ -59,18 +14,16 @@
 
   <!-- Ecran : supprimer .screen__map pour un fond uni -->
   <div class="screen">
-    <div class="screen__map"></div>
     <div class="screen__content">
       <!-- Contenu libre ici -->
     </div>
   </div>
 
   <div class="frame"></div>
-  <div class="frame-inner"></div>
 
   <!-- Bandeau : logo de la compagnie en cours -->
   <div class="badge">
-    <img class="badge__logo" data-logo src="" alt="" hidden>
+    <img class="badge__logo" data-logo src="logos/air-france.svg" alt="Air France">
   </div>
 
   <div class="corner corner--tl"></div>

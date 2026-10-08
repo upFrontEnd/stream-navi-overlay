@@ -1,12 +1,16 @@
-/* ==========================================================================
-   Reset minimal
-   ========================================================================== */
+html {
+  height: 100%;
+}
 
-html,
 body {
   margin: 0;
   padding: 0;
-  background: transparent; /* indispensable pour OBS */
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  font-family: "Roboto Condensed", "Segoe UI", system-ui, sans-serif;
 }
 
 [hidden] { display: none !important; }
