@@ -274,4 +274,36 @@
   } else {
     demarrer();
   }
+
+  /* ------------------------------------------------------------------
+     Auto-reload : detecte un nouveau build et recharge la page.
+     En production (OBS file://), build-time.json est a cote de
+     index.html.  Chaque build genere un nouveau timestamp ; si celui
+     du serveur est plus recent que celui embarque, on recharge.
+     ------------------------------------------------------------------ */
+
+  var CURRENT_BUILD_TIME =
+    typeof __BUILD_TIME__ !== "undefined" ? __BUILD_TIME__ : 0;
+
+  function verifierNouvelleBuild() {
+    try {
+      var url = new URL("build-time.json", window.location.href);
+      url.searchParams.set("_", String(Date.now()));
+      fetch(url.toString())
+        .then(function (reponse) {
+          if (!reponse.ok) return;
+          return reponse.json();
+        })
+        .then(function (data) {
+          if (data && data.t > CURRENT_BUILD_TIME) {
+            var freshUrl = new URL(window.location.href);
+            freshUrl.searchParams.set("_v", String(data.t));
+            window.location.replace(freshUrl.toString());
+          }
+        })
+        .catch(function () {});
+    } catch (e) {}
+  }
+
+  setInterval(verifierNouvelleBuild, 60000);
 })();

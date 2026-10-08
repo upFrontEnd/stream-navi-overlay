@@ -8,9 +8,26 @@ try {
     .forEach((f) => unlinkSync(f));
 } catch {}
 
+const BUILD_TIME = Date.now();
+
+function buildTimePlugin() {
+  return {
+    name: "build-time",
+    generateBundle() {
+      this.emitFile({
+        type: "asset",
+        fileName: "build-time.json",
+        source: JSON.stringify({ t: BUILD_TIME }),
+      });
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [viteSingleFile()],
+  define: {
+    __BUILD_TIME__: BUILD_TIME,
+  },
+  plugins: [buildTimePlugin(), viteSingleFile()],
   css: {
     devSourcemap: true,
   },
@@ -18,8 +35,6 @@ export default defineConfig({
     open: true,
   },
   build: {
-    // Un seul index.html autonome (JS/CSS/images inlines) : necessaire pour
-    // OBS Source navigateur > Fichier local, qui charge le fichier en file://
     assetsInlineLimit: Number.MAX_SAFE_INTEGER,
     cssCodeSplit: false,
   },
