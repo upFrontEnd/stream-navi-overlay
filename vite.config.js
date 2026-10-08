@@ -1,5 +1,13 @@
+import { readdirSync, unlinkSync } from "fs";
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
+
+try {
+  readdirSync(".")
+    .filter((f) => f.startsWith("vite.config.js.timestamp-"))
+    .forEach((f) => unlinkSync(f));
+} catch {}
+
 
 export default defineConfig({
   plugins: [viteSingleFile()],

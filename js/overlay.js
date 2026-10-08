@@ -60,9 +60,6 @@
     DAH: { nom: "Air Algerie", logo: "air-algerie.svg" }
   };
 
-  /* Compagnie affichee par defaut, tant qu'aucun callsign n'est lu */
-  var DEFAUT = "AFR";
-
   /* Nom du parametre d'URL pour forcer une compagnie manuellement,
      utile en test : index.html?cie=AFR (desactive alors le suivi
      StreamFlight pour cette session) */
@@ -163,11 +160,8 @@
 
     if (!compagnie || !compagnie.logo) return;
 
-    var nouveauSrc = DOSSIER_LOGOS + compagnie.logo;
-    if (logo.getAttribute("src") === nouveauSrc) return;
-
     logo.alt = compagnie.nom;
-    logo.src = nouveauSrc;
+    logo.src = DOSSIER_LOGOS + compagnie.logo;
   }
 
   function codeManuel() {
@@ -214,11 +208,7 @@
         callsignPrecedent = callsign;
 
         var code = compagnieDepuisCallsign(callsign);
-        /* N'appeler afficher que si la compagnie est referencee.
-           Un callsign inconnu (VFR, ferry, etc.) garde l'affichage en cours. */
-        if (code && COMPAGNIES[code]) {
-          afficher(code);
-        }
+        if (code) afficher(code);
       })
       .catch(function (erreur) {
         /* Fichier absent tant que StreamFlight n'est pas connecte au sim :
@@ -236,7 +226,8 @@
 
   /* Changement d'ancre sans rechargement (mode manuel) */
   window.addEventListener("hashchange", function () {
-    afficher(codeManuel() || DEFAUT);
+    var code = codeManuel();
+    if (code) afficher(code);
   });
 
   /* ------------------------------------------------------------------
@@ -262,9 +253,6 @@
       afficher(manuel);
       return;
     }
-
-    /* Le logo par defaut (AFR) est deja dans l'attribut src du HTML.
-       On demarre le suivi sans ecraser l'affichage. */
 
     var simbrief = parametreSimBrief();
     if (simbrief) {
