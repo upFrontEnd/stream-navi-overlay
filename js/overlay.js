@@ -38,7 +38,7 @@
     IBE: { nom: "Iberia", logo: "iberia.svg" },
     WZZ: { nom: "Wizz Air", logo: "wizz-air.svg" },
     VOE: { nom: "Volotea", logo: "volotea.svg" },
-    CRL: { nom: "Corsair", logo: "corsair.svg" },
+    CRL: { nom: "Corsair", logo: "corsair.png" },
     FWI: { nom: "Air Caraibes", logo: "air-caraibes.svg" },
     TAP: { nom: "TAP Air Portugal", logo: "tap-air-portugal.svg" },
     SWR: { nom: "SWISS", logo: "swiss.svg" },
