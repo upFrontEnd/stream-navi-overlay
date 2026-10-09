@@ -4,23 +4,22 @@
   height: 625px;
   transform: scale(var(--scale));
   transform-origin: 0 0;
+  background: url('../docs/preview2.png') center / 100% 100% no-repeat;
 }
 
 .overlay > * { position: absolute; }
 
 .screen {
-  left: 5px;
-  top: 27px;
-  width: 382px;
-  height: 593px;
-  border-radius: calc(var(--radius) - 3px);
+  left: 49px;
+  top: 93px;
+  width: 295px;
+  height: 475px;
   overflow: hidden;
 }
 
 .screen__content {
   position: absolute;
   inset: 0;
-  padding: 28px;
   box-sizing: border-box;
   color: #e8eef6;
 }
