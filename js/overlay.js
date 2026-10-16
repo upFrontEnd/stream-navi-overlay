@@ -66,29 +66,6 @@
   var PARAMETRE = "cie";
 
   /* ------------------------------------------------------------------
-     2. Ecran transparent : index.html?ecran=transparent
-
-        Rend .screen transparent (fond degrade + carte masques) pour
-        laisser apparaitre, dans OBS, une source placee en-dessous
-        (ex. Capture de fenetre Navigraph) a travers ce rectangle,
-        tout en gardant le cadre/coins/badge visibles au-dessus.
-        Cadrage/position de cette source dans OBS : reglage manuel.
-     ------------------------------------------------------------------ */
-
-  var PARAMETRE_ECRAN = "ecran";
-  var VALEUR_ECRAN_TRANSPARENT = "transparent";
-
-  function ecranTransparentDemande() {
-    var trouve = new RegExp("[?&]" + PARAMETRE_ECRAN + "=([^&#]*)").exec(window.location.search);
-    return !!trouve && decodeURIComponent(trouve[1]).toLowerCase() === VALEUR_ECRAN_TRANSPARENT;
-  }
-
-  var ecran = document.querySelector(".screen");
-  if (ecran && ecranTransparentDemande()) {
-    ecran.classList.add("screen--transparent");
-  }
-
-  /* ------------------------------------------------------------------
      3a. SimBrief : lecture du callsign depuis le dernier plan de vol.
 
          Parametre URL : ?simbrief=USERNAME  (nom de compte SimBrief)

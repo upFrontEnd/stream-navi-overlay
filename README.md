@@ -9,7 +9,6 @@ Overlay Twitch/OBS pour le streaming de simulateur de vol (Microsoft Flight Simu
 - **Carte de navigation** en fond d'ecran (`img/map.jpg`), avec cadre degrade bleu/cyan et coins decoupes.
 - **Bandeau compagnie** : affiche automatiquement le logo de la compagnie aerienne correspondant au CALLSIGN du vol en cours.
 - **Detection automatique** via [StreamFlight](https://flightsim.to/addon/98415/streamflight-your-obs-streaming-companion), le compagnon de stream OBS pour MSFS : l'overlay lit en continu le fichier `callsign.txt` genere par StreamFlight et en deduit la compagnie (ex. `AFR1234` -> Air France).
-- **Ecran transparent optionnel** (`?ecran=transparent`) pour incruster une capture de fenetre Navigraph a la place de la carte statique, directement dans OBS.
 - **Mode manuel** (`?cie=AFR`) pour forcer une compagnie en test, sans dependre de StreamFlight.
 
 Aucun framework front : HTML / SCSS / JS natif, buildes avec Bun + Vite.
@@ -44,7 +43,7 @@ scss/
   overlay.scss         assemble les partials via @use
   _variables.scss       custom properties CSS (couleurs, echelle, geometrie)
   _reset.scss            reset html/body
-  _screen.scss           ecran (fond dégrade + carte + mode transparent)
+  _screen.scss           conteneur .overlay (fond + echelle)
   _frame.scss             cadre, coins
   _badge.scss             bandeau logo compagnie
 js/
@@ -88,14 +87,6 @@ Ajouter `?cie=CODE` a l'URL de la source navigateur desactive le suivi StreamFli
 ```
 file:///C:/overlay-navi/dist/index.html?cie=AFR
 ```
-
-## Incruster Navigraph a la place de la carte
-
-1. Ajouter `?ecran=transparent` a l'URL de cette source navigateur (cumulable avec `?cie=`) : la carte et le fond degrade de l'ecran disparaissent, seuls le cadre/coins/badge restent visibles.
-2. Ajouter une source **Capture de fenetre** pour Navigraph dans OBS, recadree et positionnee a la main sur le rectangle de l'ecran (`left: 4px`, `top: 26px`, `385 x 590 px`, multiplie par `--scale`).
-3. Dans la liste des sources OBS, placer cette Capture de fenetre **en dessous** de la source navigateur de l'overlay.
-
-L'affichage/masquage de cette capture selon que Navigraph tourne ou non reste manuel : une source navigateur en bac a sable ne peut pas detecter le lancement d'une autre application.
 
 ## Screenshot automatique (CI)
 

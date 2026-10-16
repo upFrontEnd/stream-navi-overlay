@@ -12,11 +12,54 @@
 
 <div class="overlay">
 
-    <div class="led-green"></div>
+  <div class="frame-glow"></div>
+  <div class="frame"></div>
+  <svg class="panel" viewBox="0 0 392 625" aria-hidden="true">
+    <defs>
+      <linearGradient id="panel-fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4a6a8c" stop-opacity=".22"/>
+        <stop offset=".6" stop-color="#2a4058" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#050a10" stop-opacity=".55"/>
+      </linearGradient>
+      <linearGradient id="groove-stroke" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4a86c8" stop-opacity=".25"/>
+        <stop offset=".5" stop-color="#6fb0f0" stop-opacity=".5"/>
+        <stop offset="1" stop-color="#8fd0ff" stop-opacity=".7"/>
+      </linearGradient>
+      <linearGradient id="streak-stroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#7fc4ff" stop-opacity="0"/>
+        <stop offset=".5" stop-color="#9fd8ff" stop-opacity=".85"/>
+        <stop offset="1" stop-color="#7fc4ff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path class="panel__fill" d="M19,58 Q19,50 27,50 H365 Q373,50 373,58 V560 C373,575 366,585 347,595 L295,612 Q285,618 270,618 H122 Q107,618 97,612 L45,595 C26,585 19,575 19,560 Z M39,61 H355 V582 H39 Z"/>
+    <path class="panel__groove-shadow" d="M20.5,58 V560 C20.5,575 27,585 46,595 L98,612 Q108,619.5 122,619.5 H270 Q284,619.5 294,613 L346,596 C365,586 371.5,575 371.5,560 V58"/>
+    <path class="panel__groove" d="M19,58 V560 C19,575 26,585 45,595 L97,612 Q107,618 122,618 H270 Q285,618 295,612 L347,595 C366,585 373,575 373,560 V58"/>
+    <path class="panel__streak" d="M115,611 H277"/>
+  </svg>
+  <div class="window"></div>
+  <div class="plate"></div>
+  <div class="ruler ruler--left"></div>
+  <div class="ruler ruler--right"></div>
+  <i class="screw screw--tl"></i>
+  <i class="screw screw--tr"></i>
+  <i class="screw screw--bl"></i>
+  <i class="screw screw--br"></i>
+  <i class="screw screw--small screw--ml-t"></i>
+  <i class="screw screw--small screw--mr-t"></i>
+  <i class="screw screw--small screw--ml-b"></i>
+  <i class="screw screw--small screw--mr-b"></i>
+  <span class="btn-label btn-label--range">Range</span>
+  <span class="btn-label btn-label--mode">Mode</span>
+  <span class="btn-label btn-label--charts">Charts</span>
+  <div class="btn btn--range"></div>
+  <div class="btn btn--blank"></div>
+  <div class="btn btn--mode"></div>
+  <div class="btn btn--charts"></div>
+  <span class="btn-arrows">&#8679;<br>&#8681;</span>
+  <div class="knob"></div>
 
-  <div class="screen">
-    <div class="screen__content"></div>
-  </div>
+  <div class="led-green"></div>
 
   <div class="badge">
     <img class="badge__logo" data-logo src="" alt="">

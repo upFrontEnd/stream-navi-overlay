@@ -1,5 +1,9 @@
 :root {
   --scale: 1;
+
+  /* Degrade de la bordure (bleu en haut, cyan en bas) */
+  --c-blue: #4285ec;
+  --c-cyan: #069de4;
   --logo-max-w: 170px;
   --logo-max-h: 30px;
 }
