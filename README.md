@@ -1,25 +1,23 @@
 # stream-navi-overlay
 
-Overlay Twitch/OBS pour le streaming de simulateur de vol (Microsoft Flight Simulator + Navigraph), affichant une carte de navigation et le logo de la compagnie aerienne en cours de vol.
+Overlay Twitch/OBS pour le streaming de simulateur de vol, affichant le logo de la compagnie aerienne en cours de vol.
 
 ![Apercu de l'overlay](docs/preview.png)
 
 ## Fonctionnement
 
-- **Carte de navigation** en fond d'ecran (`img/map.jpg`), avec cadre degrade bleu/cyan et coins decoupes.
-- **Bandeau compagnie** : affiche automatiquement le logo de la compagnie aerienne correspondant au CALLSIGN du vol en cours.
-- **Detection automatique** via [StreamFlight](https://flightsim.to/addon/98415/streamflight-your-obs-streaming-companion), le compagnon de stream OBS pour MSFS : l'overlay lit en continu le fichier `callsign.txt` genere par StreamFlight et en deduit la compagnie (ex. `AFR1234` -> Air France).
-- **Mode SimBrief** (`?simbrief=USERNAME` ou `?simbrief=PILOT_ID`) : l'overlay recupere directement le dernier plan de vol et lit le code compagnie.
-- **Mode manuel** (`?cie=AFR`) pour forcer une compagnie en test, sans dependre de StreamFlight.
-
-Aucun framework front : HTML / SCSS / JS natif, buildes avec Bun + Vite.
+- **Support physique** : boitier metallique avec cadre degrade bleu/cyan, cadrans, vis et LED d'ambiance, entierement rendu en CSS/SVG.
+- **Bandeau compagnie** : affiche automatiquement le logo de la compagnie aerienne du dernier plan de vol.
+- **Detection automatique** via [SimBrief](https://www.simbrief.com) : l'overlay interroge l'API toutes les 30 secondes et lit le code ICAO compagnie (`general.icao_airline`).
+- **Mode manuel** (`?cie=AFR` ou `#AFR` dans l'URL) : force une compagnie pour les tests, sans dependre de SimBrief.
 
 ## Stack technique
 
+- [Vue 3](https://vuejs.org) (Composition API, `<script setup>`)
 - [Bun](https://bun.sh) comme gestionnaire de paquets et runtime de script
 - [Vite](https://vite.dev) pour le dev server et le build
 - SCSS (Dart Sass) pour les styles
-- [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile) : le build produit un **unique `dist/index.html` autonome** (JS/CSS/images inlines), indispensable pour une source navigateur OBS en "Fichier local" (`file://`)
+- [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile) : le build produit un **unique `dist/index.html` autonome** (JS/CSS inlines), indispensable pour une source navigateur OBS en "Fichier local" (`file://`)
 
 ## Demarrage
 
@@ -36,70 +34,77 @@ bun run build     # genere dist/index.html (autonome)
 
 Dans OBS : **Sources > + > Source navigateur**, cocher **Fichier local**, pointer sur `dist/index.html`, largeur `392`, hauteur `625` (a multiplier par la variable `--scale` si elle est modifiee dans `scss/_variables.scss`).
 
+## Configuration SimBrief
+
+Definir l'identifiant SimBrief de l'une des trois facons suivantes (par ordre de priorite) :
+
+1. **Parametre URL** : `dist/index.html?simbrief=monpseudo` — ideal pour tester
+2. **Variable de build** : `VITE_SIMBRIEF_USERNAME=monpseudo` dans `.env.local` — embarquee au build
+3. **Parametre numerique** : `?simbrief=123456` accepte aussi le Pilot ID SimBrief
+
+> Les variables `VITE_*` sont integrees en clair dans le build. Ne pas y mettre de mot de passe ni de cle secrete.
+
+L'API SimBrief est appellée directement depuis le navigateur ; le mode SimBrief depend donc de l'autorisation CORS renvoyee par SimBrief. Si elle bloque, l'overlay conserve le logo courant et emet un avertissement dans la console.
+
+## Mode manuel
+
+Ajouter `?cie=CODE` ou `#CODE` a l'URL desactive SimBrief pour la session :
+
+```
+file:///C:/overlay-navi/dist/index.html?cie=AFR
+file:///C:/overlay-navi/dist/index.html#EZY
+```
+
+L'API `window.overlay` reste accessible depuis la console de la source navigateur OBS :
+
+```js
+overlay.compagnie('KLM')   // change la compagnie a chaud
+overlay.liste()             // renvoie tous les codes disponibles
+```
+
 ## Structure du projet
 
 ```
-index.html            point d'entree (Vite)
+index.html                  point d'entree Vite
+src/
+  main.js                   bootstrap Vue + import SCSS global
+  App.vue                   template du support (HTML/SVG)
+  composables/
+    useOverlay.js            logique metier : donnees compagnies, SimBrief, mode manuel
 scss/
-  overlay.scss         assemble les partials via @use
-  _variables.scss       custom properties CSS (couleurs, echelle, geometrie)
-  _reset.scss            reset html/body
-  _screen.scss           conteneur .overlay (fond + echelle)
-  _frame.scss             cadre, coins
-  _badge.scss             bandeau logo compagnie
-js/
-  overlay.js            logique d'affichage + suivi StreamFlight
-img/
-  map.jpg               carte de navigation (fond d'ecran)
+  overlay.scss               assemble les partials via @use
+  _variables.scss             custom properties CSS (couleurs, echelle)
+  _reset.scss                 reset html/body
+  _screen.scss                conteneur .overlay
+  _frame.scss                 cadre metallique CSS
+  _badge.scss                 bandeau logo compagnie
+  _light.scss                 LED verte
+  _animations.scss            animations CSS (power-on, groove runner, LED pulse...)
 public/
-  logos/                logos des compagnies, copies tels quels dans dist/
+  logos/                     logos des compagnies (PNG/SVG, copies tels quels dans dist/)
 scripts/
-  screenshot.mjs         capture Playwright du rendu (voir plus bas)
+  screenshot.mjs              capture Playwright du rendu
 docs/
-  preview.png            capture utilisee dans ce README
+  preview.png                 capture utilisee dans ce README
 ```
 
 ## Compagnies et logos
 
-La liste des compagnies se configure dans `js/overlay.js` (objet `COMPAGNIES`), avec le prefixe ICAO du callsign comme cle :
+La liste des compagnies se configure dans `src/composables/useOverlay.js` (objet `COMPAGNIES`), avec le prefixe ICAO du callsign comme cle :
 
 ```js
-var COMPAGNIES = {
-  AFR: { nom: "Air France", logo: "air-france.svg" },
-  TVF: { nom: "Transavia", logo: "transavia.svg" },
-  EZY: { nom: "easyJet", logo: "easyjet.svg" },
-  RYR: { nom: "Ryanair", logo: "ryanair.svg" },
-  VLG: { nom: "Vueling", logo: "vueling.svg" }
-};
+const COMPAGNIES = {
+  AFR: { nom: 'Air France', logo: 'air-france.svg' },
+  EZY: { nom: 'easyJet',   logo: 'easyjet.svg' },
+  // ...
+}
 ```
 
-Chaque logo doit exister dans `public/logos/` (PNG ou SVG, fond transparent). Si le fichier est absent ou que le code ne correspond a aucune compagnie, le bandeau se masque simplement (pas de texte de repli).
-
-## Detection automatique via StreamFlight
-
-1. Dans StreamFlight, regler le dossier **Output** sur le **meme dossier** que `dist/index.html`.
-2. L'overlay lit `callsign.txt` dans ce dossier toutes les 2 secondes et en deduit la compagnie.
-3. Le nom exact du fichier n'est pas documente officiellement par StreamFlight ; `callsign.txt` est la convention la plus probable (coherente avec les autres fichiers qu'il genere : `flight_phase.txt`, `vspeed.txt`...). A corriger dans `STREAMFLIGHT_FICHIER` (`js/overlay.js`) si different chez toi.
-
-## Mode SimBrief : appels API, cles et CORS
-
-Avec `?simbrief=USERNAME` ou `?simbrief=PILOT_ID`, le navigateur appelle directement l'API SimBrief (`https://www.simbrief.com/api/xml.fetcher.php`) toutes les 30 secondes. Il n'y a ni serveur intermediaire ni cle API dans l'application : l'identifiant SimBrief (nom de compte ou Pilot ID) est transmis dans l'URL de la requete. `?cie=CODE` reste prioritaire ; sans parametre `simbrief`, l'overlay utilise StreamFlight.
-
-Comme la requete part du navigateur, le mode SimBrief depend de l'autorisation CORS renvoyee par SimBrief. Si cette API n'autorise pas l'origine depuis laquelle l'overlay est servi, le navigateur bloquera la lecture de la reponse ; l'application ne contourne pas cette restriction par un proxy.
-
-L'identifiant peut aussi etre defini au build avec `VITE_SIMBRIEF_USERNAME` (par exemple dans l'environnement du workflow de deploiement). Attention : les variables `VITE_*` sont integrees au JavaScript du build et ne sont pas secretes. Le nom de compte ou Pilot ID utilise est donc visible aux personnes qui consultent l'overlay ou les requetes du navigateur ; ne mettez jamais de mot de passe ni de cle secrete dans cette variable.
-
-## Test manuel sans StreamFlight
-
-Ajouter `?cie=CODE` a l'URL de la source navigateur desactive le suivi StreamFlight pour la session :
-
-```
-file:///C:/overlay-navi/dist/index.html?cie=AFR
-```
+Chaque logo doit exister dans `public/logos/` (PNG ou SVG, fond transparent). Si le fichier est absent ou que le code ne correspond a aucune compagnie, le bandeau reste vide.
 
 ## Screenshot automatique (CI)
 
-Le fichier `docs/preview.png` (utilise en haut de ce README) est regenere automatiquement par le workflow [`.github/workflows/screenshot.yml`](.github/workflows/screenshot.yml) a chaque push sur `main` : build de l'overlay, capture avec [Playwright](https://playwright.dev), puis commit de l'image si le rendu a change.
+Le fichier `docs/preview.png` est regenere automatiquement par le workflow [`.github/workflows/screenshot.yml`](.github/workflows/screenshot.yml) a chaque push sur `main`.
 
 Pour le generer en local :
 
@@ -108,4 +113,4 @@ bun run build
 bun run screenshot   # ecrit docs/preview.png
 ```
 
-> Le workflow a besoin des permissions d'ecriture du `GITHUB_TOKEN` pour committer la capture : verifier **Settings > Actions > General > Workflow permissions > Read and write permissions** sur le depot.
+> Le workflow a besoin des permissions d'ecriture du `GITHUB_TOKEN` : verifier **Settings > Actions > General > Workflow permissions > Read and write permissions** sur le depot.
