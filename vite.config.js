@@ -1,5 +1,6 @@
 import { readdirSync, unlinkSync } from "fs";
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
 try {
@@ -27,7 +28,7 @@ export default defineConfig({
   define: {
     __BUILD_TIME__: BUILD_TIME,
   },
-  plugins: [buildTimePlugin(), viteSingleFile()],
+  plugins: [vue(), buildTimePlugin(), viteSingleFile()],
   css: {
     devSourcemap: true,
   },

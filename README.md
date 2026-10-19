@@ -9,6 +9,7 @@ Overlay Twitch/OBS pour le streaming de simulateur de vol (Microsoft Flight Simu
 - **Carte de navigation** en fond d'ecran (`img/map.jpg`), avec cadre degrade bleu/cyan et coins decoupes.
 - **Bandeau compagnie** : affiche automatiquement le logo de la compagnie aerienne correspondant au CALLSIGN du vol en cours.
 - **Detection automatique** via [StreamFlight](https://flightsim.to/addon/98415/streamflight-your-obs-streaming-companion), le compagnon de stream OBS pour MSFS : l'overlay lit en continu le fichier `callsign.txt` genere par StreamFlight et en deduit la compagnie (ex. `AFR1234` -> Air France).
+- **Mode SimBrief** (`?simbrief=USERNAME` ou `?simbrief=PILOT_ID`) : l'overlay recupere directement le dernier plan de vol et lit le code compagnie.
 - **Mode manuel** (`?cie=AFR`) pour forcer une compagnie en test, sans dependre de StreamFlight.
 
 Aucun framework front : HTML / SCSS / JS natif, buildes avec Bun + Vite.
@@ -79,6 +80,14 @@ Chaque logo doit exister dans `public/logos/` (PNG ou SVG, fond transparent). Si
 1. Dans StreamFlight, regler le dossier **Output** sur le **meme dossier** que `dist/index.html`.
 2. L'overlay lit `callsign.txt` dans ce dossier toutes les 2 secondes et en deduit la compagnie.
 3. Le nom exact du fichier n'est pas documente officiellement par StreamFlight ; `callsign.txt` est la convention la plus probable (coherente avec les autres fichiers qu'il genere : `flight_phase.txt`, `vspeed.txt`...). A corriger dans `STREAMFLIGHT_FICHIER` (`js/overlay.js`) si different chez toi.
+
+## Mode SimBrief : appels API, cles et CORS
+
+Avec `?simbrief=USERNAME` ou `?simbrief=PILOT_ID`, le navigateur appelle directement l'API SimBrief (`https://www.simbrief.com/api/xml.fetcher.php`) toutes les 30 secondes. Il n'y a ni serveur intermediaire ni cle API dans l'application : l'identifiant SimBrief (nom de compte ou Pilot ID) est transmis dans l'URL de la requete. `?cie=CODE` reste prioritaire ; sans parametre `simbrief`, l'overlay utilise StreamFlight.
+
+Comme la requete part du navigateur, le mode SimBrief depend de l'autorisation CORS renvoyee par SimBrief. Si cette API n'autorise pas l'origine depuis laquelle l'overlay est servi, le navigateur bloquera la lecture de la reponse ; l'application ne contourne pas cette restriction par un proxy.
+
+L'identifiant peut aussi etre defini au build avec `VITE_SIMBRIEF_USERNAME` (par exemple dans l'environnement du workflow de deploiement). Attention : les variables `VITE_*` sont integrees au JavaScript du build et ne sont pas secretes. Le nom de compte ou Pilot ID utilise est donc visible aux personnes qui consultent l'overlay ou les requetes du navigateur ; ne mettez jamais de mot de passe ni de cle secrete dans cette variable.
 
 ## Test manuel sans StreamFlight
 
